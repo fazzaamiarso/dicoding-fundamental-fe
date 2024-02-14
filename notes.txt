@@ -1,0 +1,5 @@
+## Fonts
+- Nunito Sans (https://fonts.google.com/specimen/Nunito+Sans?sort=popularity);
+
+## UI Inspiration
+- https://dribbble.com/shots/21401593-Edworking-com-Quick-Notes-Web-Version
