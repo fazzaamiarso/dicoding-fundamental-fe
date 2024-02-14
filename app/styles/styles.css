@@ -1,3 +1,9 @@
 body {
     font-family: "Nunito Sans", sans-serif;
 }
+
+.note {
+    border: 1px solid black;
+    padding: 1rem;
+    list-style: none;
+}
