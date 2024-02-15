@@ -4,3 +4,17 @@ body {
 }
 
 
+.header {
+    background-color: white;
+}
+
+.header__container {
+    width: 90%;
+    margin-inline: auto;
+    padding-block: 1.5rem;
+}
+
+.header__title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}

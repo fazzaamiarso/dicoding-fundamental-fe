@@ -13,9 +13,6 @@ class NoteInput extends HTMLElement {
     this.titleField = clone.querySelector("#title-input");
     this.bodyField = clone.querySelector("#body-input");
 
-    this.titleError = clone.querySelector("#title-error");
-    this.bodyError = clone.querySelector("#body-error");
-
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.appendChild(clone);
 
