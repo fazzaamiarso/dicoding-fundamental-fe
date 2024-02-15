@@ -11,18 +11,22 @@ class NoteList extends HTMLElement {
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.append(clone);
+
+    this.insertNote = this.insertNote.bind(this);
   }
 
-  insertNotes(items) {
-    items.forEach((item) => {
-      const noteItem = new NoteItem();
-      noteItem.setAttribute("note-id", item.id);
-      noteItem.setAttribute("note-title", item.title);
-      noteItem.setAttribute("note-body", item.body);
+  insertNote(note) {
+    const noteItem = new NoteItem();
+    noteItem.setAttribute("note-id", note.id);
+    noteItem.setAttribute("note-title", note.title);
+    noteItem.setAttribute("note-body", note.body);
 
-      this.#noteElements.push(noteItem);
-      this.listNode.append(noteItem);
-    });
+    this.#noteElements.push(noteItem);
+    this.listNode.append(noteItem);
+  }
+
+  insertNotes(notes) {
+    notes.forEach(this.insertNote);
   }
 }
 customElements.define("note-list", NoteList);
