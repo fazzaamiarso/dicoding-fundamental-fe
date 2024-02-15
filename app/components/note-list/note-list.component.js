@@ -21,7 +21,7 @@ class NoteList extends HTMLElement {
       noteItem.setAttribute("note-body", item.body);
 
       this.#noteElements.push(noteItem);
-      this.listNode.appendChild(noteItem);
+      this.listNode.append(noteItem);
     });
   }
 }
