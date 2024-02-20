@@ -8,56 +8,100 @@ template.innerHTML = `
         }
 
         form {
-            width: 90%;
+            padding: 1rem;
+            box-sizing: border-box;
             margin-inline: auto;
-
             display: flex;
             flex-direction : column;
             gap: 1.5rem;
         }
 
-        .input-container {
+        .form__title {
+          margin: 0;  
+        }
+
+        .form__group {
             display: flex;
             flex-direction: column;
+            gap:.5rem;
+        }
+
+        .form__textfield {
+          border-radius: 2px;
+        }
+
+        .form__label {
+          font-weight: 700;
+        }
+
+        .form__error {
+          font-size: .8rem;
+          color: red;
+        }
+
+        .form__actions {
+          margin-left: auto;
+          display: flex;
+          gap: .5rem;
+        }
+
+        button {
+          font-weight: 600;
+          border: none;
+          padding: .75rem 1rem;
+          cursor: pointer;
+        }
+
+        .form__cancel {
+        }
+
+        .form__confirm {
+          color: white;
+          background: #2563eb;
         }
 
         input, textarea {
             padding:.5rem;
+            outline: none;
         }
 
-        button {
-            padding: .5rem;
+        textarea {
+          resize: vertical;
         }
     </style>
     <form novalidate class="form">
-    <div class="input-container">
-      <label for="title-input">Title</label>
+    <h2 class="form__title">Add A New Note</h2>
+    <div class="form__group">
+      <label for="title-input" class="form__label">Title</label>
       <input
         id="title-input"
         name="title-input"
+        class="form__textfield"
         placeholder="please type the title"
+        autocomplete="off"
         required
       />
-      <p id="title-error" style="color: red; display: none"></p>
+      <span id="title-error" class="form__error"></span>
     </div>
-    <div class="input-container">
-      <label for="body-input">Body</label>
+    <div class="form__group">
+      <label for="body-input" class="form__label">Body</label>
       <textarea
         id="body-input"
         name="body-input"
+        class="form__textfield"
         placeholder="please type the body"
-        resize="vertical"
+        rows="5"
         required
       ></textarea>
-      <p id="body-error" style="color: red; display: none"></p>
+      <span id="body-error" class="form__error"></span>
     </div>
-    <div>
+    <div class="form__actions">
       <button
         type="button"
         class="form__cancel">
         Cancel
       </button>
-      <button>Add note</button>
+      <button class="form__confirm">Add note</button>
     </div>
   </form>
     </form>

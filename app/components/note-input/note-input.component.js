@@ -20,6 +20,7 @@ class NoteInput extends HTMLElement {
     this.submitHandler = this.submitHandler.bind(this);
     this.showError = this.showError.bind(this);
     this.hideError = this.hideError.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
   }
 
   clearFields() {
@@ -84,8 +85,8 @@ class NoteInput extends HTMLElement {
   submitHandler(evt) {
     evt.preventDefault();
 
-    const isTitleValid = this.validateTitle(this.titleField);
     const isBodyValid = this.validateBody(this.bodyField);
+    const isTitleValid = this.validateTitle(this.titleField);
 
     if (!isTitleValid || !isBodyValid) return;
 
@@ -95,27 +96,34 @@ class NoteInput extends HTMLElement {
           title: this.titleField.value,
           body: this.bodyField.value,
         },
+        bubbles: true,
+        composed: true,
       })
     );
 
     this.clearFields();
+    this.closeDialog();
+  }
+
+  closeDialog() {
+    // TODO: fix this selector later
+    this._shadow.querySelectorAll("input, textarea").forEach(this.hideError);
+    this.dispatchEvent(
+      new CustomEvent("close-dialog", { composed: true, bubbles: true })
+    );
   }
 
   connectedCallback() {
     this.form.addEventListener("submit", this.submitHandler);
-    const validationTriggerEvents = ["blur", "change"];
+    this.cancelButton.addEventListener("click", this.closeDialog);
+
+    const validationTriggerEvents = ["change"];
     validationTriggerEvents.forEach((eventTrigger) => {
       this.titleField.addEventListener(eventTrigger, (event) =>
         this.validateTitle(event.target)
       );
       this.bodyField.addEventListener(eventTrigger, (event) =>
         this.validateBody(event.target)
-      );
-    });
-
-    this.cancelButton.addEventListener("click", () => {
-      this.dispatchEvent(
-        new CustomEvent("close-dialog", { composed: true, bubbles: true })
       );
     });
   }
