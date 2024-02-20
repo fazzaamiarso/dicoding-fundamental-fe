@@ -3,6 +3,9 @@ const template = document.createElement("template");
 template.id = "note-list-template";
 template.innerHTML = `
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         :host {
             display: block;
         }
@@ -10,11 +13,12 @@ template.innerHTML = `
             list-style: none;
             margin: 0;
             padding: 0;
-            
-            width: 100%;
+            margin-inline: auto;
+            width: 90%;
+
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+            gap: 1rem;
 
         }
     </style>

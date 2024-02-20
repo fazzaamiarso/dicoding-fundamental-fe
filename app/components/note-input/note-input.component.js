@@ -12,6 +12,7 @@ class NoteInput extends HTMLElement {
     this.form = clone.querySelector("form");
     this.titleField = clone.querySelector("#title-input");
     this.bodyField = clone.querySelector("#body-input");
+    this.cancelButton = clone.querySelector(".form__cancel");
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.appendChild(clone);
@@ -109,6 +110,12 @@ class NoteInput extends HTMLElement {
       );
       this.bodyField.addEventListener(eventTrigger, (event) =>
         this.validateBody(event.target)
+      );
+    });
+
+    this.cancelButton.addEventListener("click", () => {
+      this.dispatchEvent(
+        new CustomEvent("close-dialog", { composed: true, bubbles: true })
       );
     });
   }

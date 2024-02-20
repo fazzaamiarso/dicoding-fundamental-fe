@@ -20,6 +20,7 @@ class NoteList extends HTMLElement {
     noteItem.setAttribute("note-id", note.id);
     noteItem.setAttribute("note-title", note.title);
     noteItem.setAttribute("note-body", note.body);
+    noteItem.setAttribute("note-created-at", note.createdAt);
 
     this.#noteElements.push(noteItem);
     this.listNode.append(noteItem);
