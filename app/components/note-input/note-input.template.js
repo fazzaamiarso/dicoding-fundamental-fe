@@ -27,10 +27,23 @@ template.innerHTML = `
         }
 
         .form__textfield {
-          border-radius: 2px;
+          border: 1px solid black;
+          border-radius: 4px;
+
+          padding: 1rem;
+          font-size: 1rem;
+        }
+        
+        .form__textfield:focus-visible {
+          outline: 1px solid blue;
+        }
+
+        .form__textfield--error {
+          border: 1px var(--error) solid;
         }
 
         .form__label {
+          font-size: 1.25rem;
           font-weight: 700;
         }
 
@@ -41,22 +54,29 @@ template.innerHTML = `
 
         .form__actions {
           margin-left: auto;
+          
           display: flex;
           gap: .5rem;
         }
 
         button {
           font-weight: 600;
+          font-size: .9rem;
+
           border: none;
-          padding: .75rem 1rem;
+          border-radius: 4px;
+          padding: 1rem 1.25rem;
           cursor: pointer;
         }
 
         .form__cancel {
+          background: var(--stone-100);
+          color: var(--stone-800);
+
         }
 
         .form__confirm {
-          color: white;
+          color: var(--stone-50);
           background: #2563eb;
         }
 
@@ -104,7 +124,6 @@ template.innerHTML = `
       <button class="form__confirm">Add note</button>
     </div>
   </form>
-    </form>
     
 `;
 

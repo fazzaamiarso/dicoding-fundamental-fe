@@ -5,6 +5,7 @@ template.innerHTML = `
     <style>
         .app {
             position: relative;
+            margin-block: 2rem;
         }
 
         .app__button--add {

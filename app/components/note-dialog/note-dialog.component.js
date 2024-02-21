@@ -18,6 +18,17 @@ class NoteDialog extends HTMLElement {
   close() {
     this.dialog.close("cancel");
   }
+
+  // clicking on backdrop
+  lightDissmis({ target: dialog }) {
+    if (dialog.nodeName === "DIALOG") {
+      dialog.close("dismiss");
+    }
+  }
+
+  connectedCallback() {
+    this.dialog.addEventListener("click", this.lightDissmis);
+  }
 }
 
 customElements.define("note-dialog", NoteDialog);

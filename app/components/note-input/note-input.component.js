@@ -23,9 +23,12 @@ class NoteInput extends HTMLElement {
     this.closeDialog = this.closeDialog.bind(this);
   }
 
-  clearFields() {
+  resetFieldState() {
     this.titleField.value = "";
     this.bodyField.value = "";
+
+    // TODO: fix this selector later
+    this._shadow.querySelectorAll("input, textarea").forEach(this.hideError);
   }
 
   setTitleConstraint(element) {
@@ -69,6 +72,7 @@ class NoteInput extends HTMLElement {
     const errorMessage = element.validationMessage;
 
     if (errorEl && errorMessage) {
+      element.classList.add("form__textfield--error");
       errorEl.textContent = errorMessage;
       errorEl.style.display = "block";
     }
@@ -78,6 +82,7 @@ class NoteInput extends HTMLElement {
     const errorEl = element.nextElementSibling;
 
     if (!errorEl) return;
+    element.classList.remove("form__textfield--error");
     errorEl.textContent = "";
     errorEl.style.display = "none";
   }
@@ -101,13 +106,11 @@ class NoteInput extends HTMLElement {
       })
     );
 
-    this.clearFields();
+    this.resetFieldState();
     this.closeDialog();
   }
 
   closeDialog() {
-    // TODO: fix this selector later
-    this._shadow.querySelectorAll("input, textarea").forEach(this.hideError);
     this.dispatchEvent(
       new CustomEvent("close-dialog", { composed: true, bubbles: true })
     );
@@ -115,7 +118,10 @@ class NoteInput extends HTMLElement {
 
   connectedCallback() {
     this.form.addEventListener("submit", this.submitHandler);
-    this.cancelButton.addEventListener("click", this.closeDialog);
+    this.cancelButton.addEventListener("click", () => {
+      this.resetFieldState();
+      this.closeDialog();
+    });
 
     const validationTriggerEvents = ["change"];
     validationTriggerEvents.forEach((eventTrigger) => {

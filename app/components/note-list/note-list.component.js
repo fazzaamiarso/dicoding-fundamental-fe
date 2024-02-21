@@ -7,7 +7,7 @@ class NoteList extends HTMLElement {
   constructor() {
     super();
     const clone = document.importNode(template.content, true);
-    this.listNode = clone.querySelector(".note-list");
+    this.listNode = clone.querySelector(".note__list");
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.append(clone);

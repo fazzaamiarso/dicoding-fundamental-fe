@@ -1,3 +1,4 @@
+import { getShortDay } from "../../utils.js";
 import template from "./note-item.template.js";
 
 class NoteItem extends HTMLElement {
@@ -18,6 +19,7 @@ class NoteItem extends HTMLElement {
     this.titleEl = clone.querySelector(".note__title");
     this.bodyEl = clone.querySelector(".note__body");
     this.dateEl = clone.querySelector(".note__date");
+    this.shortDayEl = clone.querySelector(".note__shortday");
     this.timeEl = clone.querySelector(".note__time");
 
     this._shadow = this.attachShadow({ mode: "open" });
@@ -39,11 +41,13 @@ class NoteItem extends HTMLElement {
 
     if (props === "note-created-at") {
       const date = new Date(this["note-created-at"]);
+      const shortDay = getShortDay(date.getDay() - 1);
       this.timeEl.textContent = `${date
         .getHours()
         .toString()
         .padStart(2, 0)}:${date.getMinutes().toString().padStart(2, 0)}`;
       this.dateEl.textContent = date.getDate().toString().padStart(2, 0);
+      this.shortDayEl.textContent = shortDay;
     }
   }
 }

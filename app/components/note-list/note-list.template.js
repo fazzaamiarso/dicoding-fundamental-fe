@@ -9,20 +9,35 @@ template.innerHTML = `
         :host {
             display: block;
         }
-        ul {
+        .note__list {
+            --columns: 1;
+            
             list-style: none;
             margin: 0;
             padding: 0;
+
             margin-inline: auto;
             width: 90%;
 
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(var(--columns), 1fr);
             gap: 1rem;
 
         }
+
+        @media screen and (min-width: 640px) {
+            .note__list {
+                --columns: 2;
+            }
+        }
+
+        @media screen and (min-width: 1024px) {
+            .note__list {
+                --columns: 3;
+            }
+        }
     </style>
-    <ul class="note-list">
+    <ul class="note__list">
     </ul>
 `;
 

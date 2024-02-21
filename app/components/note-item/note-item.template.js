@@ -22,11 +22,31 @@ template.innerHTML = `
         gap: 1rem;
     }
 
-    .note__date {
+    .note__dates {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        background-color: lightgray;
-        padding: .5rem;
+        justify-content: center;
+        
+        background-color: var(--stone-100);
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 8px;
+    }
+
+    .note__shortday {
+        color: var(--stone-500);
+        font-size: .8rem;
+    }
+
+    .note__date {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .note__time {
+        font-size: .9rem;
+        color: var(--stone-400);
     }
 
     .note__title {
@@ -35,7 +55,10 @@ template.innerHTML = `
 </style>
 <li class="note">
     <div class="note__top">
-        <div class="note__date"></div>
+        <div class="note__dates">
+            <div class="note__shortday"></div>    
+            <div class="note__date"></div>    
+        </div>
         <div class="">
             <h2 class="note__title">INSERT SOMETHING</h2>
             <span class="note__time"></span>
