@@ -9,6 +9,7 @@ class NoteInput extends HTMLElement {
     super();
 
     const clone = document.importNode(template.content, true);
+    this.focusableEls = clone.querySelectorAll("input, textarea");
     this.form = clone.querySelector("form");
     this.titleField = clone.querySelector("#title-input");
     this.bodyField = clone.querySelector("#body-input");
@@ -27,8 +28,7 @@ class NoteInput extends HTMLElement {
     this.titleField.value = "";
     this.bodyField.value = "";
 
-    // TODO: fix this selector later
-    this._shadow.querySelectorAll("input, textarea").forEach(this.hideError);
+    this.focusableEls.forEach(this.hideError);
   }
 
   setTitleConstraint(element) {

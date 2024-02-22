@@ -26,29 +26,34 @@ class NoteItem extends HTMLElement {
     this._shadow.appendChild(clone);
   }
 
+  updateElements(props) {
+    const getTimeString = (date) => {
+      const hours = date.getHours().toString().padStart(2, 0);
+      const minutes = date.getMinutes().toString().padStart(2, 0);
+      return `${hours}:${minutes}`;
+    };
+
+    switch (props) {
+      case "note-title":
+        this.titleEl.textContent = this["note-title"];
+        break;
+      case "note-body":
+        this.bodyEl.textContent = this["note-body"];
+        break;
+      case "note-created-at":
+        const date = new Date(this["note-created-at"]);
+        const shortDay = getShortDay(date.getDay() - 1);
+        this.timeEl.textContent = getTimeString(date);
+        this.dateEl.textContent = date.getDate().toString().padStart(2, 0);
+        this.shortDayEl.textContent = shortDay;
+    }
+  }
+
   attributeChangedCallback(props, oldVal, newVal) {
     if (oldVal === newVal) return;
 
     this[props] = newVal;
-
-    if (props === "note-title") {
-      this.titleEl.textContent = this["note-title"];
-    }
-
-    if (props === "note-body") {
-      this.bodyEl.textContent = this["note-body"];
-    }
-
-    if (props === "note-created-at") {
-      const date = new Date(this["note-created-at"]);
-      const shortDay = getShortDay(date.getDay() - 1);
-      this.timeEl.textContent = `${date
-        .getHours()
-        .toString()
-        .padStart(2, 0)}:${date.getMinutes().toString().padStart(2, 0)}`;
-      this.dateEl.textContent = date.getDate().toString().padStart(2, 0);
-      this.shortDayEl.textContent = shortDay;
-    }
+    this.updateElements(props);
   }
 }
 customElements.define("note-item", NoteItem);

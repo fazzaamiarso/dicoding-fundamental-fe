@@ -85,6 +85,10 @@ template.innerHTML = `
             outline: none;
         }
 
+        input::placeholder, textarea::placeholder {
+            font-family: var(--font-family);
+        }
+
         textarea {
           resize: vertical;
         }
@@ -97,7 +101,7 @@ template.innerHTML = `
         id="title-input"
         name="title-input"
         class="form__textfield"
-        placeholder="please type the title"
+        placeholder="e.g grocery list"
         autocomplete="off"
         required
       />
@@ -109,7 +113,7 @@ template.innerHTML = `
         id="body-input"
         name="body-input"
         class="form__textfield"
-        placeholder="please type the body"
+        placeholder="e.g. banana, apple, orange"
         rows="5"
         required
       ></textarea>

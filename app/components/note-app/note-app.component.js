@@ -7,7 +7,6 @@ class NoteApp extends HTMLElement {
   constructor() {
     super();
     this.#data = notes;
-    this._searchQuery = "";
 
     const clone = document.importNode(template.content, true);
     this.noteList = clone.querySelector("note-list");
@@ -23,6 +22,7 @@ class NoteApp extends HTMLElement {
     this.searchNotes = this.searchNotes.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this.keyBindingHandler = this.keyBindingHandler.bind(this);
   }
 
   addNote(event) {
@@ -54,12 +54,27 @@ class NoteApp extends HTMLElement {
     this.noteList.render(searchedData, searchQuery);
   }
 
+  keyBindingHandler(event) {
+    const isMetaPressed = event.metaKey;
+    const keyPressed = event.key.toLowerCase();
+
+    if (isMetaPressed && keyPressed === "k") {
+      this.search.focus();
+    }
+
+    if (isMetaPressed && keyPressed === "i") {
+      this.openDialog();
+    }
+  }
+
   connectedCallback() {
     this.noteList.render(this.#data);
     this.noteForm.addEventListener("add-note", this.addNote);
     this.noteDialog.addEventListener("close-dialog", this.closeDialog);
     this.dialogButton.addEventListener("click", this.openDialog);
     this.search.addEventListener("input", this.searchNotes);
+
+    document.addEventListener("keydown", this.keyBindingHandler);
   }
 }
 
