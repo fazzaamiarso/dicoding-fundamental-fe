@@ -55,6 +55,7 @@ body {
 
 .search__keybind {
     display: none;
+    font-family: monospace;
 
     position: absolute;
     right: 0;
@@ -81,5 +82,6 @@ body {
 
     .search__keybind {
         display: flex;    
+        gap: .3rem;
     }    
 }
