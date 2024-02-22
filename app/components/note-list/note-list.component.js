@@ -26,7 +26,14 @@ class NoteList extends HTMLElement {
     this.listNode.append(noteItem);
   }
 
-  insertNotes(notes) {
+  render(notes, searchQuery) {
+    this.listNode.innerHTML = "";
+
+    if (searchQuery?.length && notes.length <= 0) {
+      this.listNode.innerHTML = `<p>No note with keyword: "${searchQuery}" found</p>`;
+      return;
+    }
+
     notes.forEach(this.insertNote);
   }
 }

@@ -9,6 +9,9 @@ body {
 }
 
 .header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 90%;
     margin-inline: auto;
     padding-block: 1.5rem;
@@ -17,4 +20,35 @@ body {
 .header__title {
     font-weight: bold;
     font-size: 1.25rem;
+}
+
+header input {
+    border-radius: 2px;
+    width: 100%;
+
+    background-color: var(--stone-200);
+    padding: .75rem 1rem;
+}
+
+header input:focus {
+    outline: 2px solid blue ;
+}
+
+header input::placeholder {
+    color: var(--stone-400);
+}
+
+.header__search {
+    position: relative;
+}
+
+.search__icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    margin-right: .5rem;
+    color: var(--stone-500);
+    width: 1.5rem;
 }

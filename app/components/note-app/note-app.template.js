@@ -9,18 +9,29 @@ template.innerHTML = `
         }
 
         .app__button--add {
+            outline: none;
+            border: 0;
+            border-radius: 99999px;
+            
             position: fixed;
             right: 0;
             bottom: 0;
-            background: transparent;
-            outline: none;
-            border: 0;
-            width: max-content;
+
+            background:white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app__button--add:focus {
+            outline: 1px blue solid;
         }
 
         .app__button--add > svg {
             pointer-events:none;
             width: 4rem;
+            background: white;
+            border-radius: 10000px;
         }
     </style>
     <div class="app"> 

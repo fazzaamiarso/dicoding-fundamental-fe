@@ -7,17 +7,20 @@ class NoteApp extends HTMLElement {
   constructor() {
     super();
     this.#data = notes;
+    this._searchQuery = "";
 
     const clone = document.importNode(template.content, true);
     this.noteList = clone.querySelector("note-list");
     this.noteForm = clone.querySelector("note-input");
     this.noteDialog = clone.querySelector("note-dialog");
     this.dialogButton = clone.querySelector(".app__button--add");
+    this.search = document.querySelector("#search");
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.append(clone);
 
     this.addNote = this.addNote.bind(this);
+    this.searchNotes = this.searchNotes.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
   }
@@ -29,7 +32,7 @@ class NoteApp extends HTMLElement {
       ...event.detail,
     };
     this.#data.push(newNote);
-    this.noteList.insertNote(newNote);
+    this.noteList.render(this.#data);
   }
 
   openDialog() {
@@ -40,11 +43,23 @@ class NoteApp extends HTMLElement {
     this.noteDialog.close();
   }
 
+  searchNotes(event) {
+    const searchQuery = event.target.value;
+    const searchedData =
+      searchQuery.length <= 0
+        ? this.#data
+        : this.#data.filter((note) =>
+            note.title.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+    this.noteList.render(searchedData, searchQuery);
+  }
+
   connectedCallback() {
-    this.noteList.insertNotes(this.#data);
+    this.noteList.render(this.#data);
     this.noteForm.addEventListener("add-note", this.addNote);
     this.noteDialog.addEventListener("close-dialog", this.closeDialog);
     this.dialogButton.addEventListener("click", this.openDialog);
+    this.search.addEventListener("input", this.searchNotes);
   }
 }
 
