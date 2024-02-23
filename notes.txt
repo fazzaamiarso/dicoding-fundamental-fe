@@ -2,7 +2,7 @@
 - Nunito Sans (https://fonts.google.com/specimen/Nunito+Sans?sort=popularity);
 
 ## UI Inspiration
-- https://dribbble.com/shots/21401593-Edworking-com-Quick-Notes-Web-Version
+- https://dribbble.com/shots/21401593-Edwortking-com-Quick-Notes-Web-Version
 
 ## References
 - https://github.com/tastejs/todomvc/blob/gh-pages/examples/web-components/src/components/todo-list/todo-list.component.js
