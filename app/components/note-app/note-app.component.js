@@ -22,6 +22,8 @@ class NoteApp extends HTMLElement {
 
     this.addNote = this.addNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
+    this.archiveNote = this.archiveNote.bind(this);
+    this.unArchiveNote = this.unArchiveNote.bind(this);
     this.searchNotes = this.searchNotes.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
@@ -59,6 +61,31 @@ class NoteApp extends HTMLElement {
       if (!res.ok) {
         throw new Error("Failed to delete notes!");
       }
+      await this.fetchAllNotes();
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
+  async archiveNote(event) {
+    try {
+      const res = await NoteService.archiveNote({ id: event.detail });
+      if (!res.ok) {
+        throw new Error("Failed to archive notes!");
+      }
+
+      await this.fetchAllNotes();
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
+  async unArchiveNote(event) {
+    try {
+      const res = await NoteService.unArchiveNote({ id: event.detail });
+      if (!res.ok) {
+        throw new Error("Failed to unarchive notes!");
+      }
 
       await this.fetchAllNotes();
     } catch (e) {
@@ -87,10 +114,16 @@ class NoteApp extends HTMLElement {
 
   async fetchAllNotes() {
     try {
-      const response = await NoteService.getNotes();
-      const json = await response.json();
+      const [activeNotesRes, archivedNotesRes] = await Promise.all([
+        NoteService.getActiveNotes(),
+        NoteService.getArchivedNotes(),
+      ]);
+      const [activeNotes, archivedNotes] = await Promise.all([
+        activeNotesRes.json(),
+        archivedNotesRes.json(),
+      ]);
 
-      this.notes = json.data;
+      this.notes = [...activeNotes.data, ...archivedNotes.data];
     } catch (e) {
       console.error(e.message);
     }
@@ -123,6 +156,8 @@ class NoteApp extends HTMLElement {
     this.search.addEventListener("input", this.searchNotes);
 
     this.addEventListener("delete-note", this.deleteNote);
+    this.addEventListener("archive-note", this.archiveNote);
+    this.addEventListener("unarchive-note", this.unArchiveNote);
     document.addEventListener("keydown", this.keyBindingHandler);
   }
 }

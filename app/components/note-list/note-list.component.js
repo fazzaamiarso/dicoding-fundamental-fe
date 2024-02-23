@@ -21,6 +21,7 @@ class NoteList extends HTMLElement {
     noteItem.setAttribute("note-title", note.title);
     noteItem.setAttribute("note-body", note.body);
     noteItem.setAttribute("note-created-at", note.createdAt);
+    noteItem.setAttribute("note-archived", note.archived);
 
     this.#noteElements.push(noteItem);
     this.listNode.append(noteItem);

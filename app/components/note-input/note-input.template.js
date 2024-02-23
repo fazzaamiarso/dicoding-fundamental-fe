@@ -87,9 +87,10 @@ template.innerHTML = `
 
         input::placeholder, textarea::placeholder {
             font-family: var(--font-family);
-        }
-
+          }
+          
         textarea {
+          font-family: var(--font-family);
           resize: vertical;
         }
     </style>

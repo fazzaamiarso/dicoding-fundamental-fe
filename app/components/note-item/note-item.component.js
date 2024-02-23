@@ -1,9 +1,24 @@
 import { getShortDay } from "../../utils.js";
 import template from "./note-item.template.js";
 
+const archiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+<path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+</svg>`;
+
+const unarchiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+<path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+</svg>
+`;
+
 class NoteItem extends HTMLElement {
   static get observedAttributes() {
-    return ["note-id", "note-title", "note-body", "note-created-at"];
+    return [
+      "note-id",
+      "note-title",
+      "note-body",
+      "note-created-at",
+      "note-archived",
+    ];
   }
 
   constructor() {
@@ -13,6 +28,7 @@ class NoteItem extends HTMLElement {
     this["note-title"] = this.getAttribute("note-title");
     this["note-body"] = this.getAttribute("note-body");
     this["note-created-at"] = this.getAttribute("note-created-at");
+    this["note-archived"] = this.getAttribute("note-archived");
 
     const clone = document.importNode(template.content, true);
     this.container = clone.querySelector(".note");
@@ -22,11 +38,13 @@ class NoteItem extends HTMLElement {
     this.shortDayEl = clone.querySelector(".note__shortday");
     this.timeEl = clone.querySelector(".note__time");
     this.deleteEl = clone.querySelector(".note__delete");
+    this.archiveEl = clone.querySelector(".note__archive");
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.appendChild(clone);
 
     this.deleteNote = this.deleteNote.bind(this);
+    this.toggleArchive = this.toggleArchive.bind(this);
   }
 
   updateElements(props) {
@@ -43,6 +61,10 @@ class NoteItem extends HTMLElement {
       case "note-body":
         this.bodyEl.textContent = this["note-body"];
         break;
+      case "note-archived":
+        this.archiveEl.innerHTML =
+          this["note-archived"] === "true" ? unarchiveIcon : archiveIcon;
+        break;
       case "note-created-at":
         const date = new Date(this["note-created-at"]);
         const shortDay = getShortDay(date.getDay() - 1);
@@ -50,6 +72,20 @@ class NoteItem extends HTMLElement {
         this.dateEl.textContent = date.getDate().toString().padStart(2, 0);
         this.shortDayEl.textContent = shortDay;
     }
+  }
+
+  toggleArchive() {
+    const dispatchedEvent =
+      this["note-archived"] === "true" ? "unarchive-note" : "archive-note";
+
+    console.log(dispatchedEvent);
+    this.dispatchEvent(
+      new CustomEvent(dispatchedEvent, {
+        detail: this["note-id"],
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   deleteNote() {
@@ -71,10 +107,12 @@ class NoteItem extends HTMLElement {
 
   connectedCallback() {
     this.deleteEl.addEventListener("click", this.deleteNote);
+    this.archiveEl.addEventListener("click", this.toggleArchive);
   }
 
   disconnectedCallback() {
-    this.deleteEl.removeEventListener("click", this.deleteNote);
+    this.archiveEl.removeEventListener("click", this.deleteNote);
+    this.deleteEl.removeEventListener("click", this.toggleArchive);
   }
 }
 customElements.define("note-item", NoteItem);
