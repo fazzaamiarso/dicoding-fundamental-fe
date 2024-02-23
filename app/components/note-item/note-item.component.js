@@ -21,9 +21,12 @@ class NoteItem extends HTMLElement {
     this.dateEl = clone.querySelector(".note__date");
     this.shortDayEl = clone.querySelector(".note__shortday");
     this.timeEl = clone.querySelector(".note__time");
+    this.deleteEl = clone.querySelector(".note__delete");
 
     this._shadow = this.attachShadow({ mode: "open" });
     this._shadow.appendChild(clone);
+
+    this.deleteNote = this.deleteNote.bind(this);
   }
 
   updateElements(props) {
@@ -49,11 +52,29 @@ class NoteItem extends HTMLElement {
     }
   }
 
+  deleteNote() {
+    this.dispatchEvent(
+      new CustomEvent("delete-note", {
+        detail: this["note-id"],
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
   attributeChangedCallback(props, oldVal, newVal) {
     if (oldVal === newVal) return;
 
     this[props] = newVal;
     this.updateElements(props);
+  }
+
+  connectedCallback() {
+    this.deleteEl.addEventListener("click", this.deleteNote);
+  }
+
+  disconnectedCallback() {
+    this.deleteEl.removeEventListener("click", this.deleteNote);
   }
 }
 customElements.define("note-item", NoteItem);

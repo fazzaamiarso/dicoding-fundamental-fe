@@ -8,3 +8,4 @@
 - https://github.com/tastejs/todomvc/blob/gh-pages/examples/web-components/src/components/todo-list/todo-list.component.js
 - https://github.com/1Marc/modern-todomvc-vanillajs/blob/app-architecture/js/component.todolist.js
 - https://web.dev/articles/building/a-dialog-component#styling_with_open_props
+- https://gist.github.com/richard-flosi/b6cdba782576447fcc9789f6cdfe2e31

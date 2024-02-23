@@ -1,14 +1,16 @@
 import template from "./note-app.template.js";
-import notes from "../../data.js";
+import * as NoteService from "../../service/note-service.js";
 
 class NoteApp extends HTMLElement {
-  #data = [];
+  static get observedAttributes() {
+    return ["notes"];
+  }
 
   constructor() {
     super();
-    this.#data = notes;
 
     const clone = document.importNode(template.content, true);
+
     this.noteList = clone.querySelector("note-list");
     this.noteForm = clone.querySelector("note-input");
     this.noteDialog = clone.querySelector("note-dialog");
@@ -19,20 +21,49 @@ class NoteApp extends HTMLElement {
     this._shadow.append(clone);
 
     this.addNote = this.addNote.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
     this.searchNotes = this.searchNotes.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.keyBindingHandler = this.keyBindingHandler.bind(this);
   }
 
-  addNote(event) {
+  get notes() {
+    return JSON.parse(this.getAttribute("notes"));
+  }
+
+  set notes(v) {
+    return this.setAttribute("notes", JSON.stringify(v));
+  }
+
+  async addNote(event) {
     const newNote = {
-      id: +new Date(),
-      createdAt: new Date().toISOString(),
       ...event.detail,
     };
-    this.#data.push(newNote);
-    this.noteList.render(this.#data);
+
+    try {
+      const res = await NoteService.createNote(newNote);
+      if (!res.ok) {
+        throw new Error("Failed to add new notes!");
+      }
+
+      await this.fetchAllNotes();
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
+  async deleteNote(event) {
+    try {
+      const res = await NoteService.deleteNote({ id: event.detail });
+      if (!res.ok) {
+        throw new Error("Failed to delete notes!");
+      }
+
+      await this.fetchAllNotes();
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 
   openDialog() {
@@ -47,11 +78,22 @@ class NoteApp extends HTMLElement {
     const searchQuery = event.target.value;
     const searchedData =
       searchQuery.length <= 0
-        ? this.#data
-        : this.#data.filter((note) =>
+        ? this.notes
+        : this.notes.filter((note) =>
             note.title.toLowerCase().includes(searchQuery.toLowerCase())
           );
     this.noteList.render(searchedData, searchQuery);
+  }
+
+  async fetchAllNotes() {
+    try {
+      const response = await NoteService.getNotes();
+      const json = await response.json();
+
+      this.notes = json.data;
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 
   keyBindingHandler(event) {
@@ -67,13 +109,20 @@ class NoteApp extends HTMLElement {
     }
   }
 
-  connectedCallback() {
-    this.noteList.render(this.#data);
-    this.noteForm.addEventListener("add-note", this.addNote);
+  attributeChangedCallback() {
+    this.noteList.render(this.notes);
+  }
+
+  async connectedCallback() {
+    await this.fetchAllNotes();
+    this.noteForm.addEventListener("add-note", async (e) => {
+      await this.addNote(e);
+    });
     this.noteDialog.addEventListener("close-dialog", this.closeDialog);
     this.dialogButton.addEventListener("click", this.openDialog);
     this.search.addEventListener("input", this.searchNotes);
 
+    this.addEventListener("delete-note", this.deleteNote);
     document.addEventListener("keydown", this.keyBindingHandler);
   }
 }
