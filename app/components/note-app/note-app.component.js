@@ -3,7 +3,7 @@ import * as NoteService from "../../service/note-service.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {
-    return ["notes"];
+    return ["notes", "loading"];
   }
 
   constructor() {
@@ -30,6 +30,14 @@ class NoteApp extends HTMLElement {
     this.keyBindingHandler = this.keyBindingHandler.bind(this);
   }
 
+  get loading() {
+    return JSON.parse(this.getAttribute("loading"));
+  }
+
+  set loading(v) {
+    return this.setAttribute("loading", JSON.stringify(v));
+  }
+
   get notes() {
     return JSON.parse(this.getAttribute("notes"));
   }
@@ -53,6 +61,8 @@ class NoteApp extends HTMLElement {
     } catch (e) {
       console.error(e.message);
     }
+
+    this.closeDialog();
   }
 
   async deleteNote(event) {
@@ -113,6 +123,7 @@ class NoteApp extends HTMLElement {
   }
 
   async fetchAllNotes() {
+    this.loading = true;
     try {
       const [activeNotesRes, archivedNotesRes] = await Promise.all([
         NoteService.getActiveNotes(),
@@ -126,6 +137,8 @@ class NoteApp extends HTMLElement {
       this.notes = [...activeNotes.data, ...archivedNotes.data];
     } catch (e) {
       console.error(e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -143,7 +156,11 @@ class NoteApp extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    this.noteList.render(this.notes);
+    if (this.loading) {
+      this.noteList.renderLoader();
+    } else {
+      this.noteList.render(this.notes);
+    }
   }
 
   async connectedCallback() {

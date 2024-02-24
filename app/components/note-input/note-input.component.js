@@ -19,9 +19,9 @@ class NoteInput extends HTMLElement {
     this._shadow.appendChild(clone);
 
     this.submitHandler = this.submitHandler.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
     this.showError = this.showError.bind(this);
     this.hideError = this.hideError.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
   }
 
   resetFieldState() {
@@ -107,12 +107,14 @@ class NoteInput extends HTMLElement {
     );
 
     this.resetFieldState();
-    this.closeDialog();
   }
 
   closeDialog() {
     this.dispatchEvent(
-      new CustomEvent("close-dialog", { composed: true, bubbles: true })
+      new CustomEvent("close-dialog", {
+        bubbles: true,
+        composed: true,
+      })
     );
   }
 

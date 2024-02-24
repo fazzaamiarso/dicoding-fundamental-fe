@@ -27,11 +27,23 @@ class NoteList extends HTMLElement {
     this.listNode.append(noteItem);
   }
 
+  renderLoader() {
+    this.listNode.innerHTML = "<p>Loading notes..</p>";
+  }
+
+  renderEmpty() {
+    this.listNode.innerHTML = "<p>No notes found!</p>";
+  }
+
   render(notes, searchQuery) {
     this.listNode.innerHTML = "";
 
     if (searchQuery?.length && notes.length <= 0) {
       this.listNode.innerHTML = `<p>No note with keyword: "${searchQuery}" found</p>`;
+      return;
+    }
+    if (notes.length <= 0) {
+      this.renderEmpty();
       return;
     }
 

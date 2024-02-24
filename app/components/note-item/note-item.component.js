@@ -78,7 +78,6 @@ class NoteItem extends HTMLElement {
     const dispatchedEvent =
       this["note-archived"] === "true" ? "unarchive-note" : "archive-note";
 
-    console.log(dispatchedEvent);
     this.dispatchEvent(
       new CustomEvent(dispatchedEvent, {
         detail: this["note-id"],
