@@ -1,5 +1,6 @@
 import template from "./note-app.template.js";
 import * as NoteService from "../../service/note-service.js";
+import EventBus from "../../event-bus.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {
@@ -108,7 +109,7 @@ class NoteApp extends HTMLElement {
   }
 
   closeDialog() {
-    this.noteDialog.close();
+    EventBus.dispatch("close-dialog");
   }
 
   searchNotes(event) {
@@ -165,16 +166,13 @@ class NoteApp extends HTMLElement {
 
   async connectedCallback() {
     await this.fetchAllNotes();
-    this.noteForm.addEventListener("add-note", async (e) => {
-      await this.addNote(e);
-    });
-    this.noteDialog.addEventListener("close-dialog", this.closeDialog);
     this.dialogButton.addEventListener("click", this.openDialog);
     this.search.addEventListener("input", this.searchNotes);
 
-    this.addEventListener("delete-note", this.deleteNote);
-    this.addEventListener("archive-note", this.archiveNote);
-    this.addEventListener("unarchive-note", this.unArchiveNote);
+    EventBus.register("add-note", this.addNote);
+    EventBus.register("delete-note", this.deleteNote);
+    EventBus.register("archive-note", this.archiveNote);
+    EventBus.register("unarchive-note", this.unArchiveNote);
     document.addEventListener("keydown", this.keyBindingHandler);
   }
 }
