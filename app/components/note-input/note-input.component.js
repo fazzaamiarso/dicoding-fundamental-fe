@@ -1,3 +1,4 @@
+import EventBus from "../../event-bus.js";
 import template from "./note-input.template.js";
 
 class NoteInput extends HTMLElement {
@@ -95,27 +96,16 @@ class NoteInput extends HTMLElement {
 
     if (!isTitleValid || !isBodyValid) return;
 
-    this.dispatchEvent(
-      new CustomEvent("add-note", {
-        detail: {
-          title: this.titleField.value,
-          body: this.bodyField.value,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    EventBus.dispatch("add-note", {
+      title: this.titleField.value,
+      body: this.bodyField.value,
+    });
 
     this.resetFieldState();
   }
 
   closeDialog() {
-    this.dispatchEvent(
-      new CustomEvent("close-dialog", {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    EventBus.dispatch("close-dialog");
   }
 
   connectedCallback() {
