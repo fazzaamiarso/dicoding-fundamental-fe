@@ -156,6 +156,10 @@ class NoteApp extends HTMLElement {
     }
   }
 
+  changePanel(event) {
+    console.log(event.detail);
+  }
+
   attributeChangedCallback() {
     if (this.loading) {
       this.noteList.renderLoader();
@@ -173,6 +177,8 @@ class NoteApp extends HTMLElement {
     EventBus.register("delete-note", this.deleteNote);
     EventBus.register("archive-note", this.archiveNote);
     EventBus.register("unarchive-note", this.unArchiveNote);
+    EventBus.register("tab-change", this.changePanel);
+
     document.addEventListener("keydown", this.keyBindingHandler);
   }
 }

@@ -11,3 +11,4 @@
 - https://gist.github.com/richard-flosi/b6cdba782576447fcc9789f6cdfe2e31
 - https://itnext.io/handling-data-with-web-components-9e7e4a452e6e
 - https://pineco.de/creating-a-javascript-event-bus/
+- https://webcrunch.com/posts/how-to-create-tabs-with-vanilla-javascript
