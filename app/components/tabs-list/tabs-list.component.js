@@ -4,6 +4,9 @@ import template from "./tabs-list.template.js";
 class TabsList extends HTMLElement {
   constructor() {
     super();
+
+    this._defaultActive = this.getAttribute("default-active") ?? "all";
+
     const clone = document.importNode(template.content, true);
 
     this.tabsContainer = clone.querySelector(".tabs");
@@ -13,6 +16,15 @@ class TabsList extends HTMLElement {
     this._shadow.append(clone);
 
     this.onTabClick = this.onTabClick.bind(this);
+    this.setActive = this.setActive.bind(this);
+  }
+
+  setActive(activeElement) {
+    [...this.tabTriggers].forEach((element) => {
+      element.classList.remove("tabs__trigger--active");
+    });
+
+    activeElement.classList.add("tabs__trigger--active");
   }
 
   onTabClick(event) {
@@ -20,17 +32,16 @@ class TabsList extends HTMLElement {
 
     if (!event.target.dataset.tabId) return;
 
-    [...this.tabTriggers].forEach((element) => {
-      element.classList.remove("tabs__trigger--active");
-    });
-
-    event.target.classList.add("tabs__trigger--active");
+    this.setActive(event.target);
 
     EventBus.dispatch("tab-change", tabId);
   }
 
   connectedCallback() {
     this.tabsContainer.addEventListener("click", this.onTabClick);
+    this.setActive(
+      this.shadowRoot.querySelector(`[data-tab-id=${this._defaultActive}]`),
+    );
   }
 }
 

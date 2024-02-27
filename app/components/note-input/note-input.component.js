@@ -118,10 +118,10 @@ class NoteInput extends HTMLElement {
     const validationTriggerEvents = ["change"];
     validationTriggerEvents.forEach((eventTrigger) => {
       this.titleField.addEventListener(eventTrigger, (event) =>
-        this.validateTitle(event.target)
+        this.validateTitle(event.target),
       );
       this.bodyField.addEventListener(eventTrigger, (event) =>
-        this.validateBody(event.target)
+        this.validateBody(event.target),
       );
     });
   }

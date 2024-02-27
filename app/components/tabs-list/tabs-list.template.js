@@ -3,11 +3,23 @@ const template = document.createElement("template");
 template.id = "tabs-list-template";
 template.innerHTML = `
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        :host {
+            display: block;
+        }
+
         .tabs {
             padding: 0;
             list-style: none;
+
             display: flex;
             gap: 2rem;
+
+            margin-inline: auto;
+            width: 90%;
         }
 
         .tabs__trigger {

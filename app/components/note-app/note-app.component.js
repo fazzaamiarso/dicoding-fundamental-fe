@@ -10,6 +10,8 @@ class NoteApp extends HTMLElement {
   constructor() {
     super();
 
+    this.searchedNotes = [];
+
     const clone = document.importNode(template.content, true);
 
     this.noteList = clone.querySelector("note-list");
@@ -28,6 +30,7 @@ class NoteApp extends HTMLElement {
     this.searchNotes = this.searchNotes.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this.changePanel = this.changePanel.bind(this);
     this.keyBindingHandler = this.keyBindingHandler.bind(this);
   }
 
@@ -114,13 +117,13 @@ class NoteApp extends HTMLElement {
 
   searchNotes(event) {
     const searchQuery = event.target.value;
-    const searchedData =
+    this.searchedData =
       searchQuery.length <= 0
         ? this.notes
         : this.notes.filter((note) =>
-            note.title.toLowerCase().includes(searchQuery.toLowerCase())
+            note.title.toLowerCase().includes(searchQuery.toLowerCase()),
           );
-    this.noteList.render(searchedData, searchQuery);
+    this.noteList.render(this.searchedData, searchQuery);
   }
 
   async fetchAllNotes() {
@@ -157,7 +160,15 @@ class NoteApp extends HTMLElement {
   }
 
   changePanel(event) {
-    console.log(event.detail);
+    if (event.detail === "archived") {
+      this.noteList.render(this.notes.filter((note) => note.archived));
+    }
+    if (event.detail === "active") {
+      this.noteList.render(this.notes.filter((note) => !note.archived));
+    }
+    if (event.detail === "all") {
+      this.noteList.render(this.notes);
+    }
   }
 
   attributeChangedCallback() {

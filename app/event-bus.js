@@ -15,7 +15,7 @@ class EventBus {
     this._bus.dispatchEvent(
       new CustomEvent(name, {
         detail,
-      })
+      }),
     );
   }
 }
