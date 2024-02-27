@@ -10,7 +10,7 @@ class NoteApp extends HTMLElement {
   constructor() {
     super();
 
-    this.searchedNotes = [];
+    this.activeNotes = [];
 
     const clone = document.importNode(template.content, true);
 
@@ -117,13 +117,13 @@ class NoteApp extends HTMLElement {
 
   searchNotes(event) {
     const searchQuery = event.target.value;
-    this.searchedData =
+    const searchedData =
       searchQuery.length <= 0
-        ? this.notes
-        : this.notes.filter((note) =>
-            note.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        ? this.activeNotes
+        : this.activeNotes.filter((note) =>
+            note.title.toLowerCase().includes(searchQuery.toLowerCase())
           );
-    this.noteList.render(this.searchedData, searchQuery);
+    this.noteList.render(searchedData, searchQuery);
   }
 
   async fetchAllNotes() {
@@ -161,21 +161,26 @@ class NoteApp extends HTMLElement {
 
   changePanel(event) {
     if (event.detail === "archived") {
-      this.noteList.render(this.notes.filter((note) => note.archived));
+      this.activeNotes = this.notes.filter((note) => note.archived);
+      this.noteList.render(this.activeNotes);
     }
     if (event.detail === "active") {
-      this.noteList.render(this.notes.filter((note) => !note.archived));
+      this.activeNotes = this.notes.filter((note) => !note.archived);
+      this.noteList.render(this.activeNotes);
     }
     if (event.detail === "all") {
       this.noteList.render(this.notes);
     }
   }
 
-  attributeChangedCallback() {
+  attributeChangedCallback(props) {
+    if (props === "notes") {
+    }
+
     if (this.loading) {
       this.noteList.renderLoader();
     } else {
-      this.noteList.render(this.notes);
+      this.noteList.render(this.activeNotes);
     }
   }
 
