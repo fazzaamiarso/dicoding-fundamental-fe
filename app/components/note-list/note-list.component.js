@@ -1,3 +1,4 @@
+import autoAnimate from "@formkit/auto-animate";
 import NoteItem from "../note-item/note-item.component.js";
 import template from "./note-list.template.js";
 
@@ -25,6 +26,10 @@ class NoteList extends HTMLElement {
 
     this.#noteElements.push(noteItem);
     this.listNode.append(noteItem);
+  }
+
+  connectedCallback() {
+    autoAnimate(this.listNode);
   }
 
   renderLoader() {
