@@ -4,13 +4,13 @@ import EventBus from "../../event-bus.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {
-    return ["notes", "loading"];
+    return ["notes", "loading", "active-tab", "search-query"];
   }
 
   constructor() {
     super();
 
-    this.activeNotes = [];
+    this.setAttribute("active-tab", "all");
 
     const clone = document.importNode(template.content, true);
 
@@ -40,6 +40,22 @@ class NoteApp extends HTMLElement {
 
   set loading(v) {
     return this.setAttribute("loading", JSON.stringify(v));
+  }
+
+  get activeTab() {
+    return this.getAttribute("active-tab");
+  }
+
+  set activeTab(v) {
+    return this.setAttribute("active-tab", v);
+  }
+
+  get searchQuery() {
+    return this.getAttribute("search-query");
+  }
+
+  set searchQuery(v) {
+    return this.setAttribute("search-query", v);
   }
 
   get notes() {
@@ -116,14 +132,7 @@ class NoteApp extends HTMLElement {
   }
 
   searchNotes(event) {
-    const searchQuery = event.target.value;
-    const searchedData =
-      searchQuery.length <= 0
-        ? this.activeNotes
-        : this.activeNotes.filter((note) =>
-            note.title.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-    this.noteList.render(searchedData, searchQuery);
+    this.searchQuery = event.target.value;
   }
 
   async fetchAllNotes() {
@@ -160,27 +169,26 @@ class NoteApp extends HTMLElement {
   }
 
   changePanel(event) {
-    if (event.detail === "archived") {
-      this.activeNotes = this.notes.filter((note) => note.archived);
-      this.noteList.render(this.activeNotes);
-    }
-    if (event.detail === "active") {
-      this.activeNotes = this.notes.filter((note) => !note.archived);
-      this.noteList.render(this.activeNotes);
-    }
-    if (event.detail === "all") {
-      this.noteList.render(this.notes);
-    }
+    this.activeTab = event.detail;
   }
 
-  attributeChangedCallback(props) {
-    if (props === "notes") {
-    }
+  attributeChangedCallback() {
+    let filteredNotes =
+      this.searchQuery?.length >= 0
+        ? this.notes.filter((note) =>
+            note.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
+        : this.notes;
+
+    if (this.activeTab === "active")
+      filteredNotes = this.notes.filter((note) => !note.archived);
+    if (this.activeTab === "archived")
+      filteredNotes = this.notes.filter((note) => note.archived);
 
     if (this.loading) {
       this.noteList.renderLoader();
     } else {
-      this.noteList.render(this.activeNotes);
+      this.noteList.render(filteredNotes, this.searchQuery);
     }
   }
 
