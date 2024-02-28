@@ -1,7 +1,7 @@
 import template from "./note-app.template.js";
 import * as NoteService from "../../service/note-service.js";
-import EventBus from "../../event-bus.js";
-import Toast from "../utils/toast.js";
+import EventBus from "../../utils/event-bus.js";
+import Toast from "../../utils/toast.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {

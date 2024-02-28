@@ -1,4 +1,4 @@
-import EventBus from "../../event-bus.js";
+import EventBus from "../../utils/event-bus.js";
 import template from "./note-dialog.template.js";
 
 class NoteDialog extends HTMLElement {

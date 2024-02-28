@@ -1,4 +1,4 @@
-import EventBus from "../../event-bus.js";
+import EventBus from "../../utils/event-bus.js";
 import template from "./tabs-list.template.js";
 
 class TabsList extends HTMLElement {
@@ -40,7 +40,7 @@ class TabsList extends HTMLElement {
   connectedCallback() {
     this.tabsContainer.addEventListener("click", this.onTabClick);
     this.setActive(
-      this.shadowRoot.querySelector(`[data-tab-id=${this._defaultActive}]`),
+      this.shadowRoot.querySelector(`[data-tab-id=${this._defaultActive}]`)
     );
   }
 }
