@@ -85,3 +85,19 @@ body {
     gap: 0.3rem;
   }
 }
+
+.toast {
+  background: white !important;
+  color: var(--stone-800) !important;
+  --border-color: var(--stone-100);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.toast__success {
+  --border-color: green;
+}
+
+.toast__error {
+  --border-color: var(--error);
+}

@@ -1,6 +1,7 @@
 import template from "./note-app.template.js";
 import * as NoteService from "../../service/note-service.js";
 import EventBus from "../../event-bus.js";
+import Toast from "../utils/toast.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {
@@ -78,11 +79,13 @@ class NoteApp extends HTMLElement {
       }
 
       await this.fetchAllNotes();
-    } catch (e) {
-      console.error(e.message);
-    }
 
-    this.closeDialog();
+      Toast.success("✅ Notes successfully added!").showToast();
+    } catch (e) {
+      Toast.error(e.message).showToast();
+    } finally {
+      this.closeDialog();
+    }
   }
 
   async deleteNote(event) {
@@ -92,8 +95,10 @@ class NoteApp extends HTMLElement {
         throw new Error("Failed to delete notes!");
       }
       await this.fetchAllNotes();
+
+      Toast.success("🗑️ Notes successfully deleted!").showToast();
     } catch (e) {
-      console.error(e.message);
+      Toast.error(e.message).showToast();
     }
   }
 
@@ -105,8 +110,10 @@ class NoteApp extends HTMLElement {
       }
 
       await this.fetchAllNotes();
+
+      Toast.success("🗄️ Note archived!").showToast();
     } catch (e) {
-      console.error(e.message);
+      Toast.error(e.message).showToast();
     }
   }
 
@@ -118,8 +125,10 @@ class NoteApp extends HTMLElement {
       }
 
       await this.fetchAllNotes();
+
+      Toast.success("🗃️ Note unarchived!").showToast();
     } catch (e) {
-      console.error(e.message);
+      Toast.error(e.message).showToast();
     }
   }
 
