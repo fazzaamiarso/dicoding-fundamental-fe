@@ -7,6 +7,7 @@ class TabsList extends HTMLElement {
     super();
 
     this._defaultActive = this.getAttribute("default-active") ?? "all";
+    this._active = this._defaultActive;
 
     const clone = document.importNode(template.content, true);
 
@@ -21,6 +22,8 @@ class TabsList extends HTMLElement {
   }
 
   setActive(activeElement) {
+    this._active = activeElement.dataset.tabId;
+
     [...this.tabTriggers].forEach((element) => {
       element.classList.remove("tabs__trigger--active");
     });
@@ -31,7 +34,7 @@ class TabsList extends HTMLElement {
   onTabClick(event) {
     const tabId = event.target.dataset.tabId;
 
-    if (!event.target.dataset.tabId) return;
+    if (!event.target.dataset.tabId || tabId === this._active) return;
 
     this.setActive(event.target);
 

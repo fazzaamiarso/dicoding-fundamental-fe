@@ -16,7 +16,7 @@ template.innerHTML = `
             list-style: none;
 
             display: flex;
-            gap: 2rem;
+            gap: 1rem;
 
             margin-inline: auto;
             width: 90%;
@@ -26,15 +26,18 @@ template.innerHTML = `
             border: none;
             border-radius: 4px;
             
-            background: var(--stone-200);
-            color: var(--stone-700);
+            background: var(--stone-100);
+            color: var(--stone-500);
             
             font-weight: 600;
             padding: .75rem;
+
+            cursor: pointer;
         }
 
         .tabs__trigger--active {
-            color: red;
+            background: var(--stone-700);
+            color: var(--stone-100);
         }
     </style>
     <ul class="tabs">
