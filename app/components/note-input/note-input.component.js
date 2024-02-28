@@ -1,4 +1,5 @@
 import EventBus from "../../utils/event-bus.js";
+import { dialogEvent, noteEvent } from "../../utils/events.js";
 import template from "./note-input.template.js";
 
 class NoteInput extends HTMLElement {
@@ -96,7 +97,7 @@ class NoteInput extends HTMLElement {
 
     if (!isTitleValid || !isBodyValid) return;
 
-    EventBus.dispatch("add-note", {
+    EventBus.dispatch(noteEvent.ADD_NOTE, {
       title: this.titleField.value,
       body: this.bodyField.value,
     });
@@ -105,7 +106,7 @@ class NoteInput extends HTMLElement {
   }
 
   closeDialog() {
-    EventBus.dispatch("close-dialog");
+    EventBus.dispatch(dialogEvent.CLOSE_DIALOG);
   }
 
   connectedCallback() {
@@ -117,12 +118,8 @@ class NoteInput extends HTMLElement {
 
     const validationTriggerEvents = ["change"];
     validationTriggerEvents.forEach((eventTrigger) => {
-      this.titleField.addEventListener(eventTrigger, (event) =>
-        this.validateTitle(event.target)
-      );
-      this.bodyField.addEventListener(eventTrigger, (event) =>
-        this.validateBody(event.target)
-      );
+      this.titleField.addEventListener(eventTrigger, (event) => this.validateTitle(event.target));
+      this.bodyField.addEventListener(eventTrigger, (event) => this.validateBody(event.target));
     });
   }
 }

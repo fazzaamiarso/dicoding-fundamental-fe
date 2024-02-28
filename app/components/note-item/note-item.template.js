@@ -54,9 +54,16 @@ template.innerHTML = `
     }
 
     .note__actions {
+        opacity: 0;
         display: flex;
         justify-items: justify-start;
         gap: 1.5rem;
+
+        transition: opacity 350ms;
+    }
+
+    .note:hover > .note__actions {
+        opacity : 1;
     }
 
     .note__actions button {
@@ -74,6 +81,8 @@ template.innerHTML = `
         width: 1.5rem;
         color: var(--stone-500)
     }
+
+  
 
 </style>
 <li class="note">

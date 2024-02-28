@@ -1,0 +1,12 @@
+export const dialogEvent = {
+  OPEN_DIALOG: "OPEN_DIALOG",
+  CLOSE_DIALOG: "CLOSE_DIALOG",
+};
+
+export const noteEvent = {
+  ADD_NOTE: "ADD_NOTE",
+  DELETE_NOTE: "DELETE_NOTE",
+  ARCHIVE_NOTE: "ARCHIVE_NOTE",
+  UNARCHIVE_NOTE: "UNARCHIVE_NOTE",
+  TAB_CHANGE: "TAB_CHANGE",
+};

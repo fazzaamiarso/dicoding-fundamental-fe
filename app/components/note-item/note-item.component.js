@@ -1,6 +1,7 @@
-import { getShortDay } from "../../utils.js";
+import { getShortDay, getTimeString } from "../../utils/date.js";
 import template from "./note-item.template.js";
 import EventBus from "../../utils/event-bus.js";
+import { noteEvent } from "../../utils/events.js";
 
 const archiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
@@ -13,13 +14,7 @@ const unarchiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewB
 
 class NoteItem extends HTMLElement {
   static get observedAttributes() {
-    return [
-      "note-id",
-      "note-title",
-      "note-body",
-      "note-created-at",
-      "note-archived",
-    ];
+    return ["note-id", "note-title", "note-body", "note-created-at", "note-archived"];
   }
 
   constructor() {
@@ -38,6 +33,7 @@ class NoteItem extends HTMLElement {
     this.dateEl = clone.querySelector(".note__date");
     this.shortDayEl = clone.querySelector(".note__shortday");
     this.timeEl = clone.querySelector(".note__time");
+    this.actionsEl = clone.querySelector(".note__actions");
     this.deleteEl = clone.querySelector(".note__delete");
     this.archiveEl = clone.querySelector(".note__archive");
 
@@ -49,12 +45,6 @@ class NoteItem extends HTMLElement {
   }
 
   updateElements(props) {
-    const getTimeString = (date) => {
-      const hours = date.getHours().toString().padStart(2, 0);
-      const minutes = date.getMinutes().toString().padStart(2, 0);
-      return `${hours}:${minutes}`;
-    };
-
     switch (props) {
       case "note-title":
         this.titleEl.textContent = this["note-title"];
@@ -63,8 +53,7 @@ class NoteItem extends HTMLElement {
         this.bodyEl.textContent = this["note-body"];
         break;
       case "note-archived":
-        this.archiveEl.innerHTML =
-          this["note-archived"] === "true" ? unarchiveIcon : archiveIcon;
+        this.archiveEl.innerHTML = this["note-archived"] === "true" ? unarchiveIcon : archiveIcon;
         break;
       case "note-created-at":
         const date = new Date(this["note-created-at"]);
@@ -77,13 +66,13 @@ class NoteItem extends HTMLElement {
 
   toggleArchive() {
     const dispatchedEvent =
-      this["note-archived"] === "true" ? "unarchive-note" : "archive-note";
+      this["note-archived"] === "true" ? noteEvent.UNARCHIVE_NOTE : noteEvent.ARCHIVE_NOTE;
 
     EventBus.dispatch(dispatchedEvent, this["note-id"]);
   }
 
   deleteNote() {
-    EventBus.dispatch("delete-note", this["note-id"]);
+    EventBus.dispatch(noteEvent.DELETE_NOTE, this["note-id"]);
   }
 
   attributeChangedCallback(props, oldVal, newVal) {

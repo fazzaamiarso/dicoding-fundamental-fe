@@ -1,4 +1,5 @@
 import EventBus from "../../utils/event-bus.js";
+import { noteEvent } from "../../utils/events.js";
 import template from "./tabs-list.template.js";
 
 class TabsList extends HTMLElement {
@@ -34,14 +35,12 @@ class TabsList extends HTMLElement {
 
     this.setActive(event.target);
 
-    EventBus.dispatch("tab-change", tabId);
+    EventBus.dispatch(noteEvent.TAB_CHANGE, tabId);
   }
 
   connectedCallback() {
     this.tabsContainer.addEventListener("click", this.onTabClick);
-    this.setActive(
-      this.shadowRoot.querySelector(`[data-tab-id=${this._defaultActive}]`)
-    );
+    this.setActive(this.shadowRoot.querySelector(`[data-tab-id=${this._defaultActive}]`));
   }
 }
 

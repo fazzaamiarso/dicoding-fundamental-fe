@@ -1,4 +1,5 @@
 import EventBus from "../../utils/event-bus.js";
+import { dialogEvent } from "../../utils/events.js";
 import template from "./note-dialog.template.js";
 
 class NoteDialog extends HTMLElement {
@@ -12,6 +13,7 @@ class NoteDialog extends HTMLElement {
     this._shadow.append(clone);
 
     this.close = this.close.bind(this);
+    this.open = this.open.bind(this);
   }
 
   open() {
@@ -31,7 +33,8 @@ class NoteDialog extends HTMLElement {
 
   connectedCallback() {
     this.dialog.addEventListener("click", this.lightDissmis);
-    EventBus.register("close-dialog", this.close);
+    EventBus.register(dialogEvent.CLOSE_DIALOG, this.close);
+    EventBus.register(dialogEvent.OPEN_DIALOG, this.open);
   }
 }
 

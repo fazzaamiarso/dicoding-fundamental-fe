@@ -3,8 +3,6 @@ import NoteItem from "../note-item/note-item.component.js";
 import template from "./note-list.template.js";
 
 class NoteList extends HTMLElement {
-  #noteElements = [];
-
   constructor() {
     super();
     const clone = document.importNode(template.content, true);
@@ -24,7 +22,6 @@ class NoteList extends HTMLElement {
     noteItem.setAttribute("note-created-at", note.createdAt);
     noteItem.setAttribute("note-archived", note.archived);
 
-    this.#noteElements.push(noteItem);
     this.listNode.append(noteItem);
   }
 
@@ -40,11 +37,15 @@ class NoteList extends HTMLElement {
     this.listNode.innerHTML = "<p>No notes found!</p>";
   }
 
+  renderSearchEmpty(query) {
+    this.listNode.innerHTML = `<p>No note with keyword: "${query}" found</p>`;
+  }
+
   render(notes, searchQuery) {
     this.listNode.innerHTML = "";
 
     if (searchQuery?.length && notes.length <= 0) {
-      this.listNode.innerHTML = `<p>No note with keyword: "${searchQuery}" found</p>`;
+      this.renderSearchEmpty(searchQuery);
       return;
     }
     if (notes.length <= 0) {

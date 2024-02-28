@@ -2,6 +2,7 @@ import template from "./note-app.template.js";
 import * as NoteService from "../../service/note-service.js";
 import EventBus from "../../utils/event-bus.js";
 import Toast from "../../utils/toast.js";
+import { dialogEvent, noteEvent } from "../../utils/events.js";
 
 class NoteApp extends HTMLElement {
   static get observedAttributes() {
@@ -133,11 +134,11 @@ class NoteApp extends HTMLElement {
   }
 
   openDialog() {
-    this.noteDialog.open();
+    EventBus.dispatch(dialogEvent.OPEN_DIALOG);
   }
 
   closeDialog() {
-    EventBus.dispatch("close-dialog");
+    EventBus.dispatch(dialogEvent.CLOSE_DIALOG);
   }
 
   searchNotes(event) {
@@ -185,14 +186,12 @@ class NoteApp extends HTMLElement {
     let filteredNotes =
       this.searchQuery?.length >= 0
         ? this.notes.filter((note) =>
-            note.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+            note.title.toLowerCase().includes(this.searchQuery.toLowerCase()),
           )
         : this.notes;
 
-    if (this.activeTab === "active")
-      filteredNotes = this.notes.filter((note) => !note.archived);
-    if (this.activeTab === "archived")
-      filteredNotes = this.notes.filter((note) => note.archived);
+    if (this.activeTab === "active") filteredNotes = this.notes.filter((note) => !note.archived);
+    if (this.activeTab === "archived") filteredNotes = this.notes.filter((note) => note.archived);
 
     if (this.loading) {
       this.noteList.renderLoader();
@@ -206,11 +205,11 @@ class NoteApp extends HTMLElement {
     this.dialogButton.addEventListener("click", this.openDialog);
     this.search.addEventListener("input", this.searchNotes);
 
-    EventBus.register("add-note", this.addNote);
-    EventBus.register("delete-note", this.deleteNote);
-    EventBus.register("archive-note", this.archiveNote);
-    EventBus.register("unarchive-note", this.unArchiveNote);
-    EventBus.register("tab-change", this.changePanel);
+    EventBus.register(noteEvent.ADD_NOTE, this.addNote);
+    EventBus.register(noteEvent.DELETE_NOTE, this.deleteNote);
+    EventBus.register(noteEvent.ARCHIVE_NOTE, this.archiveNote);
+    EventBus.register(noteEvent.UNARCHIVE_NOTE, this.unArchiveNote);
+    EventBus.register(noteEvent.TAB_CHANGE, this.changePanel);
 
     document.addEventListener("keydown", this.keyBindingHandler);
   }
